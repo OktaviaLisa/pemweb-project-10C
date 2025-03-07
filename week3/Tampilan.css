@@ -1,5 +1,5 @@
 body {
-    font-family: 'Courier New', Courier, monospace;
+    font-family: "poppins";
     background-color: floralwhite;
     display: flex;
     justify-content: center;
@@ -67,7 +67,7 @@ select {
 
 /* Tombol Submit */
 input[type="submit"] {
-    background: #28a745;
+    background: #e09d2a;
     color: white;
     border: none;
     padding: 12px;
@@ -79,7 +79,7 @@ input[type="submit"] {
 }
 
 input[type="submit"]:hover {
-    background: #218838;
+    background: #e09d2a;
 }
 
 input.error {
@@ -101,13 +101,13 @@ th, td {
 }
 
 th {
-    background-color: #218838;
+    background-color: #e09d2a;
     color: white;
 }
 
 /* Tombol Aksi */
 button {
-    background: #ff9800;
+    background: #ff6152;
     color: white;
     border: none;
     padding: 5px 10px;

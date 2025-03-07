@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validasi & Tabel Pendaftaran</title>
+    <link rel="stylesheet" type="text/css" href="Tampilan.css">
+</head>
+<body>
+    <h2>Formulir Pendaftaran Kelas UMKM</h2>
+
+    <form id="formPendaftaran" class="form-container" onsubmit="return tambahData()">
+        <input type="hidden" id="editIndex">
+
+        <div class="form-group">
+            <label for="nama">Nama Lengkap</label>
+            <span class="separator">:</span>
+            <input type="text" id="nama" name="nama" required>
+        </div>
+
+        <div class="form-group">
+            <label for="noTelp">No. Telepon</label>
+            <span class="separator">:</span>
+            <input type="text" id="noTelp" name="noTelp" required>
+        </div>
+
+        <div class="form-group">
+            <label for="alamat">Alamat</label>
+            <span class="separator">:</span>
+            <input type="text" id="alamat" name="alamat" required>
+        </div>
+
+        <div class="form-group">
+            <label for="bidangUsaha">Bidang Usaha</label>
+            <span class="separator">:</span>
+            <input type="text" id="bidangUsaha" name="bidangUsaha" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="jenisKelas">Jenis Kelas</label>
+            <span class="separator">:</span>
+            <select id="jenisKelas" name="jenisKelas" required>
+                <option value="Pilih Jenis Kelas" disabled selected>=== Pilih Jenis Kelas yang Diinginkan ===</option>
+                <option value="Digital Marketing">Digital Marketing</option>
+                <option value="Manajemen Keuangan">Manajemen Keuangan</option>
+                <option value="Branding dan Desain Produk">Branding dan Desain Produk</option>
+            </select>
+        </div>        
+
+        <input type="submit" value="Daftar" class="btn-daftar">
+    </form>
+
+    <h2>Data Pendaftar</h2>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Nama</th>
+                <th>No. Telepon</th>
+                <th>Alamat</th>
+                <th>Bidang Usaha</th>
+                <th>Jenis Kelas</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody id="dataList"></tbody>
+    </table>
+
+    <script src="scriptCRUD.js"></script>
+</body>
+</html>

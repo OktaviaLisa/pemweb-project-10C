@@ -34,3 +34,20 @@ body {
 .hamburger-active > span:nth-child(3) {
     @apply -rotate-45;
 }
+
+.social-icons {
+    display: flex; /* Agar ikon berjajar */
+    gap: 15px; /* Memberikan jarak antar ikon */
+    align-item: center; /* Agar rata tengah */
+    margin-top: 10px; /* Beri jarak dari atas */
+}
+
+.social-icons i {
+    font-size: 24px; /* Ukuran ikon */
+    color: white; /* Warna ikon putih */
+    transition: color 0.3s; /* Efek transisi warna */
+}
+
+.social-icons i:hover {
+    color: theme('colors.secondary'); /* Ambil dari konfigurasi Tailwind */
+}

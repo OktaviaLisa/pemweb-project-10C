@@ -5,10 +5,9 @@ include 'layout/navbar.php';
 
 // Cek jika data yang dibutuhkan tersedia
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['kelas_id'], $_POST['batch_id'], $_POST['jenis'], $_POST['harga'])) {
+    if (isset($_POST['kelas_id'], $_POST['batch_id'], $_POST['harga'])) {
         $_SESSION['idKelas'] = $_POST['kelas_id'];
         $_SESSION['batch_id'] = $_POST['batch_id'];
-        $_SESSION['jenis'] = $_POST['jenis'];
         $_SESSION['harga'] = $_POST['harga'];
     }
 }
@@ -24,13 +23,21 @@ $batch_id = $_SESSION['batch_id'];
 $harga = (float) str_replace(['Rp', '.', ','], '', $_SESSION['harga']);
 $email = $_SESSION['email'];
 
+// Ambil nama kelas
 $sql_kelas = "SELECT namaKelas, jenis FROM kelas WHERE idKelas = '$idKelas'";
 $result_kelas = $koneksi->query($sql_kelas);
-$kelas = $result_kelas->fetch_assoc();
+$kelas = $result_kelas ? $result_kelas->fetch_assoc() : null;
+if (!$kelas) {
+    $kelas['namaKelas'] = 'Data kelas tidak ditemukan';
+}
 
+// Ambil tanggal batch
 $sql_batch = "SELECT tanggal FROM batch WHERE idbatch = '$batch_id'";
 $result_batch = $koneksi->query($sql_batch);
-$batch = $result_batch->fetch_assoc();
+$batch = $result_batch ? $result_batch->fetch_assoc() : null;
+if (!$batch) {
+    $batch['tanggal'] = 'Data batch tidak ditemukan';
+}
 ?>
 
 <!DOCTYPE html>
@@ -76,8 +83,7 @@ $batch = $result_batch->fetch_assoc();
         }
     </style>
 </head>
-<body class="bg-secondary min-h-screen">
-
+<body class="bg-secondary">
 
 <section id="prosesbayar" class="pt-36 pb-32">
     <div class="container">
@@ -87,14 +93,13 @@ $batch = $result_batch->fetch_assoc();
             </h2>
         </div>
 
-        <div class="max-w-2xl mx-auto bg-white shadow-lg p-10 rounded-xl">
+        <div class="max-w-lg mx-auto bg-white shadow-lg p-6 rounded-lg">
             <div class="info-box">
                 <p><strong>Email:</strong> <?= htmlspecialchars($email) ?></p>
-                <p><strong>Jenis Kelas:</strong> <?= htmlspecialchars($kelas['jenis']) ?></p>
+                <p><strong>Jenis:</strong> <?= htmlspecialchars($kelas['jenis']) ?></p>
                 <p><strong>Kelas:</strong> <?= htmlspecialchars($kelas['namaKelas']) ?></p>
                 <p><strong>Batch:</strong> <?= htmlspecialchars($batch['tanggal']) ?></p>
                 <p><strong>Harga:</strong> Rp <?= number_format($harga, 0, ',', '.') ?></p>
-                
             </div>
 
             <!-- Form pemilihan metode pembayaran -->
@@ -135,34 +140,31 @@ $batch = $result_batch->fetch_assoc();
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    const paymentForm = document.getElementById("paymentForm");
-    const bankSelect = document.getElementById("bank");
-    const modal = document.getElementById("modalKonfirmasi");
-    const modalBody = document.getElementById("modalBody");
-
-    paymentForm.addEventListener("submit", function(event) {
+    document.getElementById("paymentForm").addEventListener("submit", function(event) {
         event.preventDefault();
 
-        const selectedBank = bankSelect.value;
-
-        if (!selectedBank) {
-            modalBody.innerHTML = `<p class="text-red-600 font-semibold text-lg">⚠ Silakan pilih metode pembayaran Anda terlebih dahulu.</p>`;
-            modal.style.display = "flex";
+        var bank = document.getElementById("bank").value;
+        if (!bank) {
+            alert("Pilih metode pembayaran terlebih dahulu!");
             return;
         }
 
-        const xhr = new XMLHttpRequest();
+        var xhr = new XMLHttpRequest();
         xhr.open("POST", "konfirmasibayar.php", true);
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && xhr.status == 200) {
-                modalBody.innerHTML = xhr.responseText;
-                modal.style.display = "flex";
+                document.getElementById("modalBody").innerHTML = xhr.responseText;
+                showModal();
             }
         };
-        xhr.send("bank=" + encodeURIComponent(selectedBank));
+        xhr.send("bank=" + encodeURIComponent(bank));
     });
 });
+
+function showModal() {
+    document.getElementById("modalKonfirmasi").style.display = "flex";
+}
 
 function closeModal() {
     document.getElementById("modalKonfirmasi").style.display = "none";

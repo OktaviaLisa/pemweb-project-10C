@@ -3,6 +3,10 @@ include 'koneksi.php';
 include 'layout/navbar.php'; 
 
 $email = $_SESSION['email'] ?? '';
+$idKelas = $_GET['idKelas'] ?? '';
+$jenis = $_GET['jenis'] ?? '';
+$namaKelas = $_GET['namaKelas'] ?? '';
+$harga = $_GET['harga'] ?? '';
 
 // Ambil data kelas
 $sql_kelas = "SELECT idKelas, namaKelas FROM kelas";
@@ -51,23 +55,28 @@ while ($row = $result_batch->fetch_assoc()) {
             <!-- Email -->
             <div class="w-full px-6 md-8 mb-5">
                 <label for="email" class="text-base font-bold text-secondary">Email</label>
-              <input type="email" id="email" name="email" value="<?= htmlspecialchars($email) ?>" readonly
-                class="w-full bg-slate-200 text-black p-3 rounded-md focus:outline-none focus:ring-secondary focus:ring-1 focus:border-secondary" required />
+                <input type="email" id="email" name="email" value="<?= htmlspecialchars($email) ?>" readonly
+                    class="w-full bg-slate-200 text-black p-3 rounded-md focus:outline-none focus:ring-secondary focus:ring-1 focus:border-secondary" required />
+            </div>
 
+            <!-- Jenis -->
+            <div class="w-full px-6 md-8 mb-5">
+                <label for="jenis" class="text-base font-bold text-secondary">Jenis</label>
+                <input type="text" id="jenis" name="jenis" value="<?= htmlspecialchars($jenis) ?>" readonly
+                    class="w-full bg-slate-200 text-black p-3 rounded-md focus:outline-none focus:ring-secondary focus:ring-1 focus:border-secondary" required />
             </div>
 
             <!-- Pilih Kelas -->
+            <!-- Tampilkan Nama Kelas -->
             <div class="w-full px-6 md-8 mb-5">
-                <label for="kelas" class="text-base font-bold text-secondary">Pilih Kelas</label>
-                <select id="kelas" name="kelas_id" class="w-full bg-slate-200 text-black p-3 rounded-md focus:outline-none focus:ring-secondary focus:ring-1 focus:border-secondary" required>
-                    <option value="" disabled selected>Pilih Kelas</option>
-                    <?php while($row = $result_kelas->fetch_assoc()): ?>
-                        <option value="<?= $row['idKelas'] ?>">
-                            <?= $row['namaKelas'] ?>
-                        </option>
-                    <?php endwhile; ?>
-                </select>
+                <label for="kelas_tampil" class="text-base font-bold text-secondary">Kelas</label>
+                <input type="text" id="kelas_tampil" value="<?= htmlspecialchars($namaKelas) ?>" readonly
+                    class="w-full bg-slate-200 text-black p-3 rounded-md focus:outline-none focus:ring-secondary focus:ring-1 focus:border-secondary" />
+
+                <!-- Hidden ID untuk dikirim -->
+                <input type="hidden" name="kelas_id" value="<?= htmlspecialchars($idKelas) ?>">
             </div>
+
 
             <!-- Pilih Batch -->
             <div class="w-full px-6 md-8 mb-5">
@@ -77,9 +86,14 @@ while ($row = $result_batch->fetch_assoc()) {
                 </select>
             </div>
 
+            <!-- Harga -->
             <div class="w-full px-6 md-8 mb-5">
-                <label for="harga" class="text-base font-bold text-secondary">Harga</label>
-                <input type="text" id="harga" name="harga" class="w-full bg-slate-200 text-black p-3 rounded-md focus:outline-none" readonly />
+                <label for="harga_display" class="text-base font-bold text-secondary">Harga</label>
+                <input type="text" id="harga_display" value="Rp <?= htmlspecialchars(number_format((int)$harga, 0, ',', '.')) ?>" readonly
+                    class="w-full bg-slate-200 text-black p-3 rounded-md focus:outline-none focus:ring-secondary focus:ring-1 focus:border-secondary" required />
+
+                <!-- Hidden input untuk dikirim ke prosesbayar.php -->
+                <input type="hidden" id="harga" name="harga" value="<?= htmlspecialchars($harga) ?>">
             </div>
 
             <!-- Tombol Submit -->
@@ -87,7 +101,7 @@ while ($row = $result_batch->fetch_assoc()) {
                 <a href="kelas.php" class="w-40 text-center bg-primary text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-500 transition">
                     Batal
                 </a>
-                <button type="submit" class="w-40 text-center bg-secondary text-white font-bold py-3 px-6 rounded-lg hover:shadow-lg transition">
+                <button type="submit" class="w-60 text-center bg-secondary text-white font-bold py-3 px-6 rounded-lg hover:shadow-lg transition">
                     Lanjut Pembayaran
                 </button>
             </div>
@@ -97,36 +111,44 @@ while ($row = $result_batch->fetch_assoc()) {
 
 <script>
     var batchData = <?= json_encode($batch_data); ?>;
+    var kelasId = "<?= $idKelas ?>";
+    var batchDropdown = document.getElementById('batch');
+    var hargaInput = document.getElementById('harga');
+    var hargaDisplay = document.getElementById('harga_display');
 
-    document.getElementById('kelas').addEventListener('change', function() {
-        var kelasId = this.value;
-        var batchDropdown = document.getElementById('batch');
-        var hargaInput = document.getElementById('harga');
-        
-        batchDropdown.innerHTML = '<option value="" disabled selected>Pilih Batch</option>';
-        hargaInput.value = ''; // Kosongkan harga saat kelas berubah
+    // Render opsi batch berdasarkan idKelas
+    if (batchData[kelasId]) {
+        batchData[kelasId].forEach(function(batch) {
+            var option = document.createElement('option');
+            option.value = batch.idbatch;
+            option.textContent = batch.tanggal;
+            option.setAttribute('data-harga', batch.harga);
+            batchDropdown.appendChild(option);
+        });
+    }
 
-        if (batchData[kelasId]) {
-            batchData[kelasId].forEach(function(batch) {
-                var option = document.createElement('option');
-                option.value = batch.idbatch;
-                option.textContent = batch.tanggal;
-                option.setAttribute('data-harga', batch.harga); // Simpan harga sebagai atribut
-                batchDropdown.appendChild(option);
-            });
-        }
-    });
-
-    document.getElementById('batch').addEventListener('change', function() {
+    // Ketika batch dipilih, perbarui harga
+    batchDropdown.addEventListener('change', function() {
         var selectedOption = this.options[this.selectedIndex];
         var harga = selectedOption.getAttribute('data-harga');
-        document.getElementById('harga').value = harga; // Isi kolom harga
+
+        // Update hidden input
+        hargaInput.value = harga;
+
+        // Format dan tampilkan harga
+        var hargaFormatted = new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            minimumFractionDigits: 0
+        }).format(harga);
+
+        hargaDisplay.value = hargaFormatted;
     });
 </script>
 
-
 </body>
 </html>
+
 <?php 
 $koneksi->close(); 
 include 'layout/footer.php';

@@ -69,10 +69,11 @@ while ($row = $result->fetch_assoc()) {
                             Pendaftaran Ditutup
                         </span>
                     <?php else : ?>
-                        <a href="daftar.php?id=<?php echo $kelas['idKelas']; ?>" 
+                        <a href="daftar.php?idKelas=<?= $kelas['idKelas']; ?>&jenis=<?= urlencode($kelas['jenis']); ?>&namaKelas=<?= urlencode($kelas['namaKelas']); ?>&harga=<?= $kelas['harga']; ?>" 
                             class="mt-4 inline-block bg-primary text-white font-bold text-center py-2 px-4 rounded-lg hover:bg-orange-500 transition">
                             Daftar Sekarang
                         </a>
+
                     <?php endif; ?>
                 </div>
                 <?php endforeach; ?>

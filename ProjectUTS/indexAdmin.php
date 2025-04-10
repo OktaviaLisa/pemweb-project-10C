@@ -186,7 +186,7 @@ while ($row = $resultMentoringChart->fetch_assoc()) {
                         <?php foreach ($labelsBootcamp as $index => $label): ?>
                             <tr class="hover:bg-gray-100">
                                 <td class="py-2 px-4 border border-gray-300 font-semibold"><?php echo $label; ?></td>
-                                <td class="py-2 px-4 border border-gray-300"><?php echo $dataBootcamp[$index]; ?> pendaftar</td>
+                                <td class="py-2 px-4 border border-gray-300"><?php echo $dataMentoring[$index]; ?> pendaftar</td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>

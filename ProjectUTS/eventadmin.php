@@ -19,7 +19,7 @@ $result = $koneksi->query($query);
 </head>
 <body class="bg-gray-100 p-6">
     <div class="pt-24">
-        <h2 class="text-2xl font-bold text-center text- mb-6">Daftar Event</h2>
+        <h2 class="text-primary text-2xl font-bold text-center text- mb-6">Daftar Event</h2>
 
         <div class="bg-white shadow-md rounded-lg p-4 overflow-x-auto">
             <!-- Tombol Tambah Event -->

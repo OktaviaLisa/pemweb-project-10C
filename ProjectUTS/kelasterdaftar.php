@@ -10,7 +10,6 @@ $sql = "SELECT k.id, k.email, c.namaKelas, b.tanggal, b.harga
         JOIN kelas c ON k.kelas_id = c.idKelas
         JOIN batch b ON k.batch_id = b.idbatch
         WHERE k.email = '$email'";
-
 $result = $koneksi->query($sql);
 
 // Data untuk chart
@@ -19,7 +18,6 @@ $sql_chart = "SELECT c.namaKelas, COUNT(k.id) as jumlah_kelas
               JOIN kelas c ON k.kelas_id = c.idKelas
               WHERE k.email = '$email'
               GROUP BY k.kelas_id";
-
 $result_chart = $koneksi->query($sql_chart);
 
 $kelas_labels = [];
@@ -45,56 +43,64 @@ while ($row_chart = $result_chart->fetch_assoc()) {
         <div class="container">
             <h2 class="text-3xl font-bold text-white text-center mb-6">Kelas yang Kamu Ikuti di <span class="text-primary">UMKMGrow</span></h2>
             <div class="overflow-x-auto">
-                <table class="w-full border-collapse border border-gray-300">
-                    <thead>
-                        <tr class="bg-primary text-white text-center">
-                            <th class="border p-3">No</th>
-                            <th class="border p-3">Email</th>
-                            <th class="border p-3">Kelas</th>
-                            <th class="border p-3">Batch</th>
-                            <th class="border p-3">Harga</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        $no = 1;
-                        while ($row = $result->fetch_assoc()) {
-                            echo "<tr class='text-center'>";
-                            echo "<td class='border p-3 bg-white'>" . $no++ . "</td>";
-                            echo "<td class='border p-3 bg-white'>" . htmlspecialchars($row['email']) . "</td>";
-                            echo "<td class='border p-3 bg-white'>" . htmlspecialchars($row['namaKelas']) . "</td>";
-                            echo "<td class='border p-3 bg-white'>" . htmlspecialchars($row['tanggal'] ?? '-') . "</td>";
-                            echo "<td class='border p-3 bg-white'>" . htmlspecialchars($row['harga'] ?? '-') . "</td>";
-                            echo "</tr>";
-                        }
-                        ?>
-                    </tbody>
-                </table>
-            </div>
+                <?php if ($result->num_rows > 0): ?>
+                    <!-- TABEL -->
+                    <table class="w-full border-collapse border border-gray-300">
+                        <thead>
+                            <tr class="bg-primary text-white text-center">
+                                <th class="border p-3">No</th>
+                                <th class="border p-3">Email</th>
+                                <th class="border p-3">Kelas</th>
+                                <th class="border p-3">Batch</th>
+                                <th class="border p-3">Harga</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $no = 1;
+                            while ($row = $result->fetch_assoc()) {
+                                echo "<tr class='text-center'>";
+                                echo "<td class='border p-3 bg-white'>" . $no++ . "</td>";
+                                echo "<td class='border p-3 bg-white'>" . htmlspecialchars($row['email']) . "</td>";
+                                echo "<td class='border p-3 bg-white'>" . htmlspecialchars($row['namaKelas']) . "</td>";
+                                echo "<td class='border p-3 bg-white'>" . htmlspecialchars($row['tanggal'] ?? '-') . "</td>";
+                                echo "<td class='border p-3 bg-white'>" . htmlspecialchars($row['harga'] ?? '-') . "</td>";
+                                echo "</tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
 
-            <!-- Tombol Download PDF -->
-            <div class="text-center mt-6">
-                <button id="downloadPdf" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary/80">Download PDF</button>
-            </div>
+                    <!-- TOMBOL DOWNLOAD -->
+                    <div class="text-center mt-6">
+                        <button id="downloadPdf" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary/80">Download PDF</button>
+                    </div>
 
-            <!-- Chart dan Info Kelas -->
-            <div class="mt-10 flex flex-col md:flex-row items-center md:items-start justify-center gap-8">
-                <div class="max-w-xs mr-10">
-                    <h2 class="text-2xl font-bold text-white text-center mb-4">Grafik Kelas</h2>
-                    <canvas id="kelasChart"></canvas>
-                </div>
+                    <!-- CHART & INFO KELAS -->
+                    <div class="mt-10 flex flex-col md:flex-row items-center md:items-start justify-center gap-8">
+                        <div class="max-w-xs mr-10">
+                            <h2 class="text-2xl font-bold text-white text-center mb-4">Grafik Kelas</h2>
+                            <canvas id="kelasChart"></canvas>
+                        </div>
 
-                <div class="max-w-xs ml-10 bg-white p-4 rounded shadow-lg border-2 border-primary">
-                    <h2 class="text-xl font-bold text-secondary mb-4">Jumlah Kelas Terdaftar</h2>
-                    <ul>
-                        <?php foreach ($kelas_labels as $index => $kelas) : ?>
-                            <li class="flex justify-between border-b py-2">
-                                <span><?= htmlspecialchars($kelas) ?></span>
-                                <span class="font-bold text-secondary ml-7"><?= $kelas_counts[$index] ?> class</span>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
+                        <div class="max-w-xs ml-10 bg-white p-4 rounded shadow-lg border-2 border-primary">
+                            <h2 class="text-xl font-bold text-secondary mb-4">Jumlah Kelas Terdaftar</h2>
+                            <ul>
+                                <?php foreach ($kelas_labels as $index => $kelas) : ?>
+                                    <li class="flex justify-between border-b py-2">
+                                        <span><?= htmlspecialchars($kelas) ?></span>
+                                        <span class="font-bold text-secondary ml-7"><?= $kelas_counts[$index] ?> class</span>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    </div>
+                <?php else: ?>
+                    <!-- TAMPILAN SAAT TIDAK ADA DATA -->
+                    <div class="text-center bg-white p-8 rounded shadow-md">
+                        <p class="text-lg text-gray-700 font-semibold">Tidak ada kelas yang terdaftar.</p>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </section>
@@ -104,6 +110,7 @@ while ($row_chart = $result_chart->fetch_assoc()) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
+    <?php if ($result->num_rows > 0): ?>
     <script>
         const ctx = document.getElementById('kelasChart').getContext('2d');
         const kelasChart = new Chart(ctx, {
@@ -146,6 +153,7 @@ while ($row_chart = $result_chart->fetch_assoc()) {
             });
         });
     </script>
+    <?php endif; ?>
 </body>
 </html>
 

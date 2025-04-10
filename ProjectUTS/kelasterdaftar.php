@@ -66,7 +66,7 @@ while ($row_chart = $result_chart->fetch_assoc()) {
                                 echo "<td class='border p-3 bg-white'>" . htmlspecialchars($row['jenis']) . "</td>";
                                 echo "<td class='border p-3 bg-white'>" . htmlspecialchars($row['namaKelas']) . "</td>";
                                 echo "<td class='border p-3 bg-white'>" . htmlspecialchars($row['tanggal'] ?? '-') . "</td>";
-                                echo "<td class='border p-3 bg-white'>" . htmlspecialchars($row['harga'] ?? '-') . "</td>";
+                                echo "<td class='border p-3 bg-white'>Rp " . number_format($row['harga'], 0, ',', '.') . "</td>";
                                 echo "</tr>";
                             }
                             ?>

@@ -5,10 +5,10 @@ include 'layout/navbar.php';
 
 // Cek jika data yang dibutuhkan tersedia
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['kelas_id'], $_POST['batch_id'], $_POST['jenisKelas'], $_POST['harga'])) {
+    if (isset($_POST['kelas_id'], $_POST['batch_id'], $_POST['jenis'], $_POST['harga'])) {
         $_SESSION['idKelas'] = $_POST['kelas_id'];
         $_SESSION['batch_id'] = $_POST['batch_id'];
-        $_SESSION['jenisKelas'] = $_POST['jenisKelas'];
+        $_SESSION['jenis'] = $_POST['jenis'];
         $_SESSION['harga'] = $_POST['harga'];
     }
 }
@@ -24,7 +24,7 @@ $batch_id = $_SESSION['batch_id'];
 $harga = (float) str_replace(['Rp', '.', ','], '', $_SESSION['harga']);
 $email = $_SESSION['email'];
 
-$sql_kelas = "SELECT namaKelas, jenisKelas FROM kelas WHERE idKelas = '$idKelas'";
+$sql_kelas = "SELECT namaKelas, jenis FROM kelas WHERE idKelas = '$idKelas'";
 $result_kelas = $koneksi->query($sql_kelas);
 $kelas = $result_kelas->fetch_assoc();
 
@@ -90,7 +90,7 @@ $batch = $result_batch->fetch_assoc();
         <div class="max-w-2xl mx-auto bg-white shadow-lg p-10 rounded-xl">
             <div class="info-box">
                 <p><strong>Email:</strong> <?= htmlspecialchars($email) ?></p>
-                <p><strong>Jenis Kelas:</strong> <?= htmlspecialchars($kelas['jenisKelas']) ?></p>
+                <p><strong>Jenis Kelas:</strong> <?= htmlspecialchars($kelas['jenis']) ?></p>
                 <p><strong>Kelas:</strong> <?= htmlspecialchars($kelas['namaKelas']) ?></p>
                 <p><strong>Batch:</strong> <?= htmlspecialchars($batch['tanggal']) ?></p>
                 <p><strong>Harga:</strong> Rp <?= number_format($harga, 0, ',', '.') ?></p>

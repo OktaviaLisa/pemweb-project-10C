@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+#hamburger {
+    position: relative;
+    z-index: 50; /* Pastikan tombol di atas elemen lain */
+    cursor: pointer;
+}
+
+
+.navbar-fixed {
+    @apply fixed z-[9999] bg-white bg-opacity-70;
+    backdrop-filter: blur(5px);
+    box-shadow: inset 0 -1px 0 0 rgba(0, 0, 0, 0.2);
+}
+
+.hamburger-line {
+    @apply w-[30px] h-[2px] my-2 block bg-gray-900; /* Ganti bg-dark dengan bg-gray-900 */
+}
+
+.hamburger-active > span:nth-child(1) {
+    @apply rotate-45;
+}
+
+.hamburger-active > span:nth-child(2) {
+    @apply scale-0; /* Perbaiki typo dari sclae-0 ke scale-0 */
+}
+
+.hamburger-active > span:nth-child(3) {
+    @apply -rotate-45;
+}
+
+.social-icons {
+    display: flex; /* Agar ikon berjajar */
+    gap: 15px; /* Memberikan jarak antar ikon */
+    align-item: center; /* Agar rata tengah */
+    margin-top: 10px; /* Beri jarak dari atas */
+}
+
+.social-icons i {
+    font-size: 24px; /* Ukuran ikon */
+    color: white; /* Warna ikon putih */
+    transition: color 0.3s; /* Efek transisi warna */
+}
+
+.social-icons i:hover {
+    color: theme('colors.secondary'); /* Ambil dari konfigurasi Tailwind */
+}

@@ -5,7 +5,7 @@ include 'layout/navbar.php';
 $email = $_SESSION['email'];
 
 // Ambil data kelas yang didaftarkan oleh user
-$sql = "SELECT k.id, k.email, c.namaKelas, b.tanggal, b.harga 
+$sql = "SELECT k.id, k.email, c.namaKelas, c.jenis, b.tanggal, b.harga 
         FROM kelaskeranjang k
         JOIN kelas c ON k.kelas_id = c.idKelas
         JOIN batch b ON k.batch_id = b.idbatch
@@ -50,6 +50,7 @@ while ($row_chart = $result_chart->fetch_assoc()) {
                             <tr class="bg-primary text-white text-center">
                                 <th class="border p-3">No</th>
                                 <th class="border p-3">Email</th>
+                                <th class="border p-3">Jenis Kelas</th>
                                 <th class="border p-3">Kelas</th>
                                 <th class="border p-3">Batch</th>
                                 <th class="border p-3">Harga</th>
@@ -62,6 +63,7 @@ while ($row_chart = $result_chart->fetch_assoc()) {
                                 echo "<tr class='text-center'>";
                                 echo "<td class='border p-3 bg-white'>" . $no++ . "</td>";
                                 echo "<td class='border p-3 bg-white'>" . htmlspecialchars($row['email']) . "</td>";
+                                echo "<td class='border p-3 bg-white'>" . htmlspecialchars($row['jenis']) . "</td>";
                                 echo "<td class='border p-3 bg-white'>" . htmlspecialchars($row['namaKelas']) . "</td>";
                                 echo "<td class='border p-3 bg-white'>" . htmlspecialchars($row['tanggal'] ?? '-') . "</td>";
                                 echo "<td class='border p-3 bg-white'>" . htmlspecialchars($row['harga'] ?? '-') . "</td>";

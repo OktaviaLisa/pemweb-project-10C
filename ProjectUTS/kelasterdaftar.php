@@ -73,11 +73,6 @@ while ($row_chart = $result_chart->fetch_assoc()) {
                         </tbody>
                     </table>
 
-                    <!-- TOMBOL DOWNLOAD -->
-                    <div class="text-center mt-6">
-                        <button id="downloadPdf" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary/80">Download PDF</button>
-                    </div>
-
                     <!-- CHART & INFO KELAS -->
                     <div class="mt-10 flex flex-col md:flex-row items-center md:items-start justify-center gap-8">
                         <div class="max-w-xs mr-10">
@@ -91,12 +86,18 @@ while ($row_chart = $result_chart->fetch_assoc()) {
                                 <?php foreach ($kelas_labels as $index => $kelas) : ?>
                                     <li class="flex justify-between border-b py-2">
                                         <span><?= htmlspecialchars($kelas) ?></span>
-                                        <span class="font-bold text-secondary ml-7"><?= $kelas_counts[$index] ?> class</span>
+                                        <span class="font-bold text-secondary ml-7"><?= $kelas_counts[$index] ?> Kelas</span>
                                     </li>
                                 <?php endforeach; ?>
                             </ul>
                         </div>
                     </div>
+                
+                    <!-- TOMBOL DOWNLOAD -->
+                    <div class="text-center mt-6">
+                        <button id="downloadPdf" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary/80">Download Riwayat Saya</button>
+                    </div>
+
                 <?php else: ?>
                     <!-- TAMPILAN SAAT TIDAK ADA DATA -->
                     <div class="text-center bg-white p-8 rounded shadow-md">

@@ -117,7 +117,7 @@ $errors = $_SESSION['errors'] ?? [];
             .then(res => res.json())
             .then(data => {
                 if (data[field]) {
-                    setError(field, ${field.charAt(0).toUpperCase() + field.slice(1)} sudah digunakan!);
+                    setError(field, `${field.charAt(0).toUpperCase() + field.slice(1)} sudah digunakan!`);
                 } else {
                     clearError(field);
                 }
@@ -125,7 +125,7 @@ $errors = $_SESSION['errors'] ?? [];
         }
 
         function setError(field, message) {
-            const input = document.querySelector(input[name='${field}']);
+            const input = document.querySelector(`input[name='${field}']`);
             input.classList.add("border-red-500");
 
             let errorMsg = input.parentNode.querySelector(".error-msg");
@@ -138,7 +138,7 @@ $errors = $_SESSION['errors'] ?? [];
         }
 
         function clearError(field) {
-            const input = document.querySelector(input[name='${field}']);
+            const input = document.querySelector(`input[name='${field}']`);
             input.classList.remove("border-red-500");
 
             const errorMsg = input.parentNode.querySelector(".error-msg");

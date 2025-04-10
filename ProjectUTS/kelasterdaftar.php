@@ -126,10 +126,18 @@ while ($row_chart = $result_chart->fetch_assoc()) {
                 }]
             },
             options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                aspectRatio: 1
+            responsive: true,
+            maintainAspectRatio: true,
+            aspectRatio: 1,
+            plugins: {
+            legend: {
+            labels: {
+                color: "#ffffff" // warna putih
             }
+        }
+    }
+}
+
         });
 
         document.getElementById('downloadPdf').addEventListener('click', function () {

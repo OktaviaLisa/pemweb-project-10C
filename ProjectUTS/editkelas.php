@@ -18,7 +18,7 @@ if (isset($_POST['submit'])) {
     $deskripsi = $_POST['deskripsi'];
     $tanggal = $_POST['tanggal'];
     $harga = $_POST['harga'];
-    $jenis = $_POST['jenis']; // diambil dari input hidden
+    $jenis = $_POST['jenis'];
 
     if ($_FILES['gambar']['name']) {
         $gambar = $_FILES['gambar']['name'];
@@ -38,10 +38,9 @@ if (isset($_POST['submit'])) {
     $queryBatch = "UPDATE batch SET tanggal='$tanggal', harga='$harga' WHERE idKelas='$idKelas'";
     $koneksi->query($queryBatch);
 
-    // Redirect map berdasarkan jenis
     $redirectMap = [
-        'bootcamp' => 'bootcampadmin.php',
-        'private mentoring' => 'mentoringadmin.php'
+        'Bootcamp' => 'bootcampadmin.php',
+        'Private Mentoring' => 'mentoringadmin.php'
     ];
 
     if (isset($redirectMap[$jenis])) {
@@ -57,61 +56,66 @@ if (isset($_POST['submit'])) {
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Kelas</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="src/output.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
-
+<body class="p-10 bg-gray-100 flex items-center justify-center min-h-screen">
     <div class="bg-white shadow-lg rounded-lg p-8 max-w-lg w-full">
-        <h2 class="text-2xl font-bold text-gray-700 mb-6 text-center">Edit Kelas</h2>
-        
+        <h2 class="text-2xl font-bold text-primary mb-6 text-center">Edit Kelas</h2>
+
         <form action="" method="POST" enctype="multipart/form-data" class="space-y-4">
             <input type="hidden" name="jenis" value="<?= htmlspecialchars($jenis); ?>">
 
             <div>
-                <label class="block text-gray-600 font-semibold">Jenis Program</label>
+                <label class="block text-secondary font-semibold">Jenis Program</label>
                 <input type="text" value="<?= htmlspecialchars($jenis); ?>" readonly
-                    class="w-full p-3 border border-gray-300 rounded-lg bg-gray-100">
+                       class="w-full p-3 border border-gray-300 rounded-lg bg-gray-100 text-gray-700">
             </div>
 
             <div>
-                <label class="block text-gray-600 font-semibold">Nama Kelas</label>
-                <input type="text" name="namaKelas" value="<?= $data['namaKelas']; ?>" required 
-                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <label class="block text-secondary font-semibold">Nama Kelas</label>
+                <input type="text" name="namaKelas" value="<?= $data['namaKelas']; ?>" required
+                       class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary">
             </div>
 
             <div>
-                <label class="block text-gray-600 font-semibold">Deskripsi</label>
-                <textarea name="deskripsi" required
-                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"><?= $data['deskripsi']; ?></textarea>
+                <label class="block text-secondary font-semibold">Deskripsi</label>
+                <textarea name="deskripsi" required rows="4"
+                          class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary"><?= $data['deskripsi']; ?></textarea>
             </div>
 
             <div>
-                <label class="block text-gray-600 font-semibold">Gambar Saat Ini</label>
-                <img src="img/<?= $data['gambar']; ?>" alt="Gambar Kelas" class="w-32 h-32 object-cover mb-2">
-                <input type="file" name="gambar" 
-                    class="w-full p-3 border border-gray-300 rounded-lg cursor-pointer bg-white file:bg-blue-500 file:text-white file:font-semibold file:px-4 file:py-2 file:rounded-lg file:border-none hover:file:bg-blue-600">
+                <label class="block text-secondary font-semibold">Gambar Saat Ini</label>
+                <img src="img/<?= $data['gambar']; ?>" alt="Gambar Kelas" class="w-32 h-32 object-cover mb-2 rounded-md">
+                <input type="file" name="gambar"
+                       class="w-full p-3 border border-gray-300 rounded-lg cursor-pointer bg-white file:bg-secondary file:text-white file:font-semibold file:px-4 file:py-2 file:rounded-lg file:border-none hover:opacity-90 transition">
             </div>
 
             <div>
-                <label class="block text-gray-600 font-semibold">Tanggal Batch</label>
+                <label class="block text-secondary font-semibold">Batch</label>
                 <input type="text" name="tanggal" value="<?= $data['tanggal']; ?>" required
-                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                       class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary">
             </div>
 
             <div>
-                <label class="block text-gray-600 font-semibold">Harga (Rp)</label>
+                <label class="block text-secondary font-semibold">Harga (Rp)</label>
                 <input type="number" name="harga" value="<?= $data['harga']; ?>" required
-                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                       class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary">
             </div>
 
-            <button type="submit" name="submit" 
-                class="w-full bg-gradient-to-r from-blue-500 to-blue-700 text-white font-semibold py-3 rounded-lg hover:opacity-90 transition">
-                Simpan Perubahan
-            </button>
+            <div class="flex gap-10">
+                <a href="<?= $jenis === 'Bootcamp' ? 'bootcampadmin.php' : 'mentoringadmin.php'; ?>"
+                   class="w-full text-center bg-primary text-white font-semibold py-3 rounded-lg hover:opacity-90 transition">
+                    Batal
+                </a>
+                <button type="submit" name="submit"
+                        class="w-full bg-secondary text-white font-semibold py-3 rounded-lg hover:opacity-90 transition">
+                    Simpan Perubahan
+                </button>
+            </div>
         </form>
     </div>
-
 </body>
 </html>
+

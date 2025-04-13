@@ -18,8 +18,8 @@ $result = $koneksi->query($query);
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 p-6">
-    <div class="pt-24">
-        <h2 class="text-primary text-2xl font-bold text-center text- mb-6">Daftar Event</h2>
+    <div class="pt-36">
+        <h2 class="mb-10 text-2xl font-bold text-center text-primary">Daftar Event</h2>
 
         <div class="bg-white shadow-md rounded-lg p-4 overflow-x-auto">
             <!-- Tombol Tambah Event -->

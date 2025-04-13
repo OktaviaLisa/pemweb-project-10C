@@ -27,14 +27,50 @@ $resultEvent = $koneksi->query($queryEvent);
 $rowEvent = $resultEvent->fetch_assoc();
 $totalEvent = $rowEvent['total'];
 
+// Hitung total pendapatan
+$queryPendapatan = "
+    SELECT SUM(batch.harga) AS totalPendapatan
+    FROM kelaskeranjang
+    JOIN batch ON kelaskeranjang.batch_id = batch.idBatch
+";
+$resultPendapatan = $koneksi->query($queryPendapatan);
+$rowPendapatan = $resultPendapatan->fetch_assoc();
+$totalPendapatan = $rowPendapatan['totalPendapatan'] ?? 0;
+
+// Hitung pendapatan Bootcamp
+$queryBootcamp = "
+    SELECT SUM(batch.harga) AS pendapatanBootcamp
+    FROM kelaskeranjang
+    JOIN batch ON kelaskeranjang.batch_id = batch.idBatch
+    JOIN kelas ON batch.idKelas = kelas.idKelas
+    WHERE kelas.jenis = 'Bootcamp'
+";
+$resultBootcamp = $koneksi->query($queryBootcamp);
+$rowBootcamp = $resultBootcamp->fetch_assoc();
+$pendapatanBootcamp = $rowBootcamp['pendapatanBootcamp'] ?? 0;
+
+// Hitung pendapatan Private Mentoring
+$queryMentoring = "
+    SELECT SUM(batch.harga) AS pendapatanMentoring
+    FROM kelaskeranjang
+    JOIN batch ON kelaskeranjang.batch_id = batch.idBatch
+    JOIN kelas ON batch.idKelas = kelas.idKelas
+    WHERE kelas.jenis = 'Private Mentoring'
+";
+$resultMentoring = $koneksi->query($queryMentoring);
+$rowMentoring = $resultMentoring->fetch_assoc();
+$pendapatanMentoring = $rowMentoring['pendapatanMentoring'] ?? 0;
+
+
 // Data untuk chart bootcamp
 $queryBootcamp = "
     SELECT kelas.namaKelas, COUNT(kelaskeranjang.id) AS jumlah
-    FROM kelaskeranjang
-    JOIN kelas ON kelas.idKelas = kelaskeranjang.kelas_id
-    WHERE kelas.jenis = 'bootcamp'
+    FROM kelas
+    LEFT JOIN kelaskeranjang ON kelas.idKelas = kelaskeranjang.kelas_id
+    WHERE kelas.jenis = 'Bootcamp'
     GROUP BY kelas.namaKelas
 ";
+
 $resultBootcamp = $koneksi->query($queryBootcamp);
 $labelsBootcamp = [];
 $dataBootcamp = [];
@@ -46,9 +82,9 @@ while ($row = $resultBootcamp->fetch_assoc()) {
 // Data untuk chart private mentoring
 $queryMentoring = "
     SELECT kelas.namaKelas, COUNT(kelaskeranjang.id) AS jumlah
-    FROM kelaskeranjang
-    JOIN kelas ON kelas.idKelas = kelaskeranjang.kelas_id
-    WHERE kelas.jenis = 'private mentoring'
+    FROM kelas
+    LEFT JOIN kelaskeranjang ON kelas.idKelas = kelaskeranjang.kelas_id
+    WHERE kelas.jenis = 'Private Mentoring'
     GROUP BY kelas.namaKelas
 ";
 $resultMentoringChart = $koneksi->query($queryMentoring);
@@ -75,82 +111,114 @@ while ($row = $resultMentoringChart->fetch_assoc()) {
 <body class="bg-gray-100 container mx-auto">
 
 <div id="dashboardContent" class="pt-24">
-    <h2 class="text-3xl font-bold text-center text-primary p-6 mb-6">Dashboard Admin</h2>
-    <!-- Kotak Statistik -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-        <!-- Kotak Bootcamp -->
-        <div class="bg-white rounded-lg shadow-md border-3 border-primary flex flex-col justify-between">
-            <div class="flex items-center justify-between p-6 h-40">
-                <div class="flex-1">
-                    <h2 class="text-xl font-semibold text-black">Bootcamp</h2>
-                    <p class="text-black">Jumlah Bootcamp</p>
-                    <p class="text-3xl font-bold text-primary"><?php echo $totalKelas; ?></p>
+    <!--Master Admin Section-->
+    <section>
+        <h2 class="text-3xl font-bold text-center text-primary p-6 mb-6">Dashboard Admin</h2>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            <!-- Kotak Bootcamp -->
+            <div class="bg-white rounded-lg shadow-md flex flex-col justify-between">
+                <div class="flex items-center justify-between p-6 h-40">
+                    <div class="flex-1">
+                        <h2 class="text-xl font-semibold text-secondary">Bootcamp</h2>
+                        <p class="text-black">Jumlah Bootcamp</p>
+                        <p class="text-3xl font-bold text-primary"><?php echo $totalKelas; ?></p>
+                    </div>
+                    <img src="img/bazar.png" alt="Kelas Image" class="w-24 h-24 object-cover">
                 </div>
-                <img src="img/bazar.png" alt="Kelas Image" class="w-24 h-24 object-cover">
+                <a href="bootcampadmin.php" class="block text-center font-semibold bg-primary text-white py-2 rounded-b-lg hover:bg-primary hover:bg-opacity-90 transition">
+                    Informasi selanjutnya
+                </a>
             </div>
-            <a href="bootcampadmin.php" class="block text-center font-semibold bg-primary text-white py-2 rounded-b-lg hover:bg-primary hover:bg-opacity-90 transition">
-                Informasi selanjutnya
-            </a>
-        </div>
 
-        <!-- Kotak Private Mentoring -->
-        <div class="bg-white rounded-lg shadow-md border-3 border-red-500 flex flex-col justify-between">
-            <div class="flex items-center justify-between p-6 h-40">
-                <div class="flex-1">
-                    <h2 class="text-xl font-semibold text-black">Private Mentoring</h2>
-                    <p class="text-black">Jumlah Private Mentoring</p>
-                    <p class="text-3xl font-bold text-primary"><?php echo $totalMentoring; ?></p>
+            <!-- Kotak Private Mentoring -->
+            <div class="bg-white rounded-lg shadow-md flex flex-col justify-between">
+                <div class="flex items-center justify-between p-6 h-40">
+                    <div class="flex-1">
+                        <h2 class="text-xl font-semibold text-secondary">Private Mentoring</h2>
+                        <p class="text-black">Jumlah Private Mentoring</p>
+                        <p class="text-3xl font-bold text-primary"><?php echo $totalMentoring; ?></p>
+                    </div>
+                    <img src="img/bazar.png" alt="Mentoring Image" class="w-24 h-24 object-cover">
                 </div>
-                <img src="img/bazar.png" alt="Mentoring Image" class="w-24 h-24 object-cover">
+                <a href="mentoringadmin.php" class="block text-center font-semibold bg-primary text-white py-2 rounded-b-lg hover:bg-primary hover:bg-opacity-90 transition">
+                    Informasi selanjutnya
+                </a>
             </div>
-            <a href="mentoringadmin.php" class="block text-center font-semibold bg-primary text-white py-2 rounded-b-lg hover:bg-primary hover:bg-opacity-90 transition">
-                Informasi selanjutnya
-            </a>
-        </div>
 
-        <!-- Kotak Event -->
-        <div class="bg-white rounded-lg shadow-md border-3 border-red-500 flex flex-col justify-between">
-            <div class="flex items-center justify-between p-6 h-40">
-                <div class="flex-1">
-                    <h2 class="text-xl font-semibold text-black">Event</h2>
-                    <p class="text-black">Jumlah Event</p>
-                    <p class="text-3xl font-bold text-primary"><?php echo $totalEvent; ?></p>
+            <!-- Kotak Event -->
+            <div class="bg-white rounded-lg shadow-md border-3 flex flex-col justify-between">
+                <div class="flex items-center justify-between p-6 h-40">
+                    <div class="flex-1">
+                        <h2 class="text-xl font-semibold text-secondary">Event</h2>
+                        <p class="text-black">Jumlah Event</p>
+                        <p class="text-3xl font-bold text-primary"><?php echo $totalEvent; ?></p>
+                    </div>
+                    <img src="img/bazar.png" alt="Event Image" class="w-24 h-24 object-cover">
                 </div>
-                <img src="img/bazar.png" alt="Event Image" class="w-24 h-24 object-cover">
+                <a href="eventadmin.php" class="block text-center font-semibold bg-primary text-white py-2 rounded-b-lg hover:bg-primary hover:bg-opacity-90 transition">
+                    Informasi selanjutnya
+                </a>
             </div>
-            <a href="eventadmin.php" class="block text-center font-semibold bg-primary text-white py-2 rounded-b-lg hover:bg-primary hover:bg-opacity-90 transition">
-                Informasi selanjutnya
-            </a>
-        </div>
 
-        <!-- Kotak Peserta -->
-        <div class="bg-white rounded-lg shadow-md border-3 border-green-500 flex flex-col justify-between">
-            <div class="flex items-center justify-between p-6 ">
-                <div class="flex-1">
-                    <h2 class="text-xl font-semibold text-black">Peserta</h2>
-                    <p class="text-black">Jumlah Peserta</p>
-                    <p class="text-3xl font-bold text-primary"><?php echo $totalPeserta; ?></p>
+            <!-- Kotak Peserta -->
+            <div class="bg-white rounded-lg shadow-md flex flex-col justify-between">
+                <div class="flex items-center justify-between p-6 ">
+                    <div class="flex-1">
+                        <h2 class="text-xl font-semibold text-secondary">Peserta</h2>
+                        <p class="text-black">Jumlah Peserta</p>
+                        <p class="text-3xl font-bold text-primary"><?php echo $totalPeserta; ?></p>
+                    </div>
+                    <img src="img/bazar.png" alt="Peserta Image" class="w-24 h-24 object-cover">
                 </div>
-                <img src="img/bazar.png" alt="Peserta Image" class="w-24 h-24 object-cover">
+                <a href="pesertaadmin.php" class="block text-center font-semibold bg-primary text-white py-2 rounded-b-lg hover:bg-primary hover:bg-opacity-90 transition">
+                    Informasi selanjutnya
+                </a>
             </div>
-            <a href="pesertaadmin.php" class="block text-center font-semibold bg-primary text-white py-2 rounded-b-lg hover:bg-primary hover:bg-opacity-90 transition">
-                Informasi selanjutnya
-            </a>
         </div>
-    </div>
+    </section>
 
-    <!-- chart -->
-    <div class="pt-4">
-        <!-- chart bootcamp -->
+    <!-- Pendapatan Section -->
+    <section>
+        <h2 class="text-3xl font-bold text-center text-primary mb-6">Grafik Pendaftar Bootcamp</h2>
+        <div class="grid grid-cols-2 max-w-5xl mx-auto gap-6 mb-12">
+            <!-- Kotak Total Pendapatan -->
+            <div class="bg-white rounded-lg shadow-md p-6 flex flex-col justify-between">
+                <h2 class="text-xl font-semibold text-secondary mb-2">Total Pendapatan</h2>
+                <p class="text-black">Keseluruhan:</p>
+                <p class="text-3xl font-bold text-secondary mt-2">Rp<?php echo number_format($totalPendapatan, 0, ',', '.'); ?></p>
+            </div>
+
+            <!-- Kotak Detail Pendapatan -->
+            <div class="bg-white rounded-lg shadow-md p-6 flex flex-col justify-between">
+                <h2 class="text-xl font-semibold text-secondary mb-2">Rincian Pendapatan</h2>
+                <div class="flex flex-col gap-2 text-black">
+                    <div class="flex justify-between">
+                        <p>Bootcamp:</p>
+                        <p class="font-semibold text-secondary">Rp<?php echo number_format($pendapatanBootcamp, 0, ',', '.'); ?></p>
+                    </div>
+                    <div class="flex justify-between">
+                        <p>Private Mentoring:</p>
+                        <p class="font-semibold text-secondary">Rp<?php echo number_format($pendapatanMentoring, 0, ',', '.'); ?></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chart Section-->
+    <section class="pt-4">
+        <!-- Chart bootcamp -->
         <h2 class="text-3xl font-bold text-center text-primary mb-6">Grafik Pendaftar Bootcamp</h2>
         <div class="bg-white p-6 rounded-lg shadow-md max-w-5xl mx-auto mb-2">
             <canvas id="bootcampChart" height="100"></canvas>
         </div>
+        <!--Detail chart-->
         <div class="bg-white mt-7 p-6 rounded-lg shadow-md max-w-5xl mx-auto mb-12">
             <h3 class="text-xl text-center font-semibold text-gray-800 mb-4">Keterangan Jumlah Pendaftar Bootcamp:</h3>
             <div class="overflow-x-auto">
                 <table class="table-auto mx-auto text-center text-gray-700 border-collapse border border-gray-300 w-full md:w-2/3">
-                    <thead class="bg-primary text-white">
+                    <thead class="bg-secondary text-white">
                         <tr>
                             <th class="py-2 px-4 border border-gray-300">Nama Kelas</th>
                             <th class="py-2 px-4 border border-gray-300">Jumlah Pendaftar</th>
@@ -167,34 +235,37 @@ while ($row = $resultMentoringChart->fetch_assoc()) {
                 </table>
             </div>
         </div>
-        <!-- chart private mentoring -->
+
+        <!-- Chart private mentoring -->
         <h2 class="text-3xl font-bold text-center text-primary mb-6">Grafik Pendaftar Private Mentoring</h2>
         <div class="bg-white p-6 rounded-lg shadow-md max-w-5xl mx-auto mb-2">
             <canvas id="mentoringChart" height="100"></canvas>
         </div>
+        <!-- Detail Chart-->
         <div class="bg-white mt-7 p-6 rounded-lg shadow-md max-w-5xl mx-auto mb-12">
             <h3 class="text-xl text-center font-semibold text-gray-800 mb-4">Keterangan Jumlah Pendaftar Private Mentoring:</h3>
             <div class="overflow-x-auto">
                 <table class="table-auto mx-auto text-center text-gray-700 border-collapse border border-gray-300 w-full md:w-2/3">
-                    <thead class="bg-primary text-white">
+                    <thead class="bg-secondary text-white">
                         <tr>
                             <th class="py-2 px-4 border border-gray-300">Nama Kelas</th>
                             <th class="py-2 px-4 border border-gray-300">Jumlah Pendaftar</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($labelsBootcamp as $index => $label): ?>
-                            <tr class="hover:bg-gray-100">
-                                <td class="py-2 px-4 border border-gray-300 font-semibold"><?php echo $label; ?></td>
-                                <td class="py-2 px-4 border border-gray-300"><?php echo $dataMentoring[$index]; ?> pendaftar</td>
-                            </tr>
-                        <?php endforeach; ?>
+                    <?php foreach ($labelsMentoring as $index => $label): ?>
+                        <tr class="hover:bg-gray-100">
+                            <td class="py-2 px-4 border border-gray-300 font-semibold"><?php echo $label; ?></td>
+                            <td class="py-2 px-4 border border-gray-300"><?php echo $dataMentoring[$index]; ?> pendaftar</td>
+                        </tr>
+                    <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
         </div>
-    </div>
-    <!-- button download report -->
+    </section>
+
+    <!-- Button Download Report -->
     <div class="text-center mb-16">
             <button onclick="downloadDashboard()" class="bg-primary text-white font-semibold px-6 py-3 rounded hover:bg-opacity-90 transition">
                 Download Report

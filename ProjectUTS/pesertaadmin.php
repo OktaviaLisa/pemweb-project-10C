@@ -25,10 +25,12 @@ if (!$result) {
     <link href="src/output.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100">
-<section class="pt-24">
+<body class="bg-gray-100 p-6">
+
+<section class="pt-36">
     <div class="container">
-        <h2 class="text-3xl font-bold text-primary text-center mb-6">Daftar Peserta</h2>
+        <h2 class="mb-10 text-2xl font-bold text-center text-primary">Daftar Peserta</h2>
+        
         <div class="bg-white shadow-md rounded-lg p-4 overflow-x-auto">
             <table class="w-full border-collapse border border-gray-400 bg-white shadow-md table-auto">
                 <thead class="bg-secondary text-white">

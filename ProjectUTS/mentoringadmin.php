@@ -8,7 +8,7 @@ $query = "SELECT kelas.idKelas, kelas.namaKelas, kelas.deskripsi, kelas.gambar,
                  batch.idbatch, batch.tanggal, batch.harga, batch.status 
           FROM kelas 
           LEFT JOIN batch ON kelas.idKelas = batch.idKelas
-          WHERE jenis = 'private mentoring'";
+          WHERE jenis = 'Private Mentoring'";
 $result = $koneksi->query($query);
 ?>
 
@@ -23,13 +23,13 @@ $result = $koneksi->query($query);
 </head>
 <body class="bg-gray-100 p-6">
 
-    <div class="pt-24">
-        <h2 class="text-2xl font-bold text-center text-primary mb-6">Daftar Private Mentoring & Batch</h2>
+    <div class="pt-36">
+        <h2 class="mb-10 text-2xl font-bold text-center text-primary">Daftar Private Mentoring & Batch</h2>
 
         <div class="bg-white shadow-md rounded-lg p-4 overflow-x-auto">
             <!-- Tombol Tambah Kelas -->
             <div class="mb-4 text-right">
-                <a href="tambahkelas.php?jenis=private mentoring"
+                <a href="tambahkelas.php?jenis=Private Mentoring"
                 class="inline-block bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition"> + Tambah Kelas
                 </a>
             </div>
@@ -70,12 +70,14 @@ $result = $koneksi->query($query);
                                 <?php if ($row['status'] == 'expired'): ?>
                                 <span class="text-red-500 font-semibold">Expired</span>
                                 <?php else: ?>
-                                <form action="expirebatch.php" method="POST">
-                                <input type="hidden" name="idbatch" value="<?php echo $row['idbatch']; ?>">
-                                <button type="submit" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 transition">
-                                Tandai Expired
-                                </button>
-                                </form>
+                                    <form action="expirebatch.php" method="POST">
+                                        <input type="hidden" name="idbatch" value="<?php echo $row['idbatch']; ?>">
+                                        <input type="hidden" name="redirect" value="mentoringadmin.php">
+                                        <button type="submit" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 transition">
+                                        Tandai Expired
+                                        </button>
+                                    </form>
+
                                 <?php endif; ?>
                             </td>
                         </tr>

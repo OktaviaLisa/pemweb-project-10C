@@ -2,7 +2,7 @@
 include 'koneksi.php';
 
 // Ambil jenis dari URL
-$jenis = isset($_GET['jenis']) ? $_GET['jenis'] : 'bootcamp'; // default bootcamp kalau kosong
+$jenis = isset($_GET['jenis']) ? $_GET['jenis'] : 'Bootcamp'; // default bootcamp kalau kosong
 
 if (isset($_POST['submit'])) {
     $namaKelas = $_POST['namaKelas'];
@@ -31,8 +31,8 @@ if (isset($_POST['submit'])) {
 
     // Redirect map berdasarkan jenis
     $redirectMap = [
-        'bootcamp' => 'bootcampadmin.php',
-        'private mentoring' => 'mentoringadmin.php'
+        'Bootcamp' => 'bootcampadmin.php',
+        'Private Mentoring' => 'mentoringadmin.php'
     ];
 
     if (isset($redirectMap[$jenis])) {
@@ -50,62 +50,72 @@ if (isset($_POST['submit'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tambah Kelas</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="src/output.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<body class="p-10 bg-gray-100 flex items-center justify-center min-h-screen">
 
     <div class="bg-white shadow-lg rounded-lg p-8 max-w-lg w-full">
-        <h2 class="text-2xl font-bold text-gray-700 mb-6 text-center">Tambah Kelas</h2>
+        <h2 class="text-2xl font-bold text-primary mb-6 text-center">Tambah Kelas</h2>
         
         <form action="" method="POST" enctype="multipart/form-data" class="space-y-4">
             <div>
-                <label class="block text-gray-600 font-semibold">Jenis Program</label>
+                <label class="block text-secondary font-semibold">Jenis Program</label>
                 <input type="text" value="<?php echo htmlspecialchars($jenis); ?>" readonly
                     class="w-full p-3 border border-gray-300 rounded-lg bg-gray-100">
             </div>
 
             <!-- Input Nama Kelas -->
             <div>
-                <label class="block text-gray-600 font-semibold">Nama Kelas</label>
+                <label class="block text-secondary font-semibold">Nama Kelas</label>
                 <input type="text" name="namaKelas" placeholder="Masukkan nama kelas" required 
-                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary">
             </div>
 
             <!-- Input Deskripsi -->
             <div>
-                <label class="block text-gray-600 font-semibold">Deskripsi</label>
+                <label class="block text-secondary font-semibold">Deskripsi</label>
                 <textarea name="deskripsi" placeholder="Masukkan deskripsi" required
-                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary"></textarea>
             </div>
 
             <!-- Input Gambar -->
             <div>
-                <label class="block text-gray-600 font-semibold">Upload Gambar</label>
+                <label class="block text-secondary font-semibold">Upload Gambar</label>
                 <input type="file" name="gambar" required 
-                    class="w-full p-3 border border-gray-300 rounded-lg cursor-pointer bg-white file:bg-blue-500 file:text-white file:font-semibold file:px-4 file:py-2 file:rounded-lg file:border-none hover:file:bg-blue-600">
+                    class="w-full p-3 border border-gray-300 rounded-lg cursor-pointer bg-white file:bg-secondary file:text-white file:font-semibold file:px-4 file:py-2 file:rounded-lg file:border-none hover:opacity-90 transition">
             </div>
 
             <!-- Input Batch -->
             <div>
-                <label class="block text-gray-600 font-semibold">Batch</label>
-                <input type="text" name="tanggal" placeholder="Masukkan batch (contoh: Batch 1)" required 
-                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <label class="block text-secondary font-semibold">Batch</label>
+                <input type="text" name="tanggal" placeholder="Masukkan batch (contoh: Batch 1: 5 April 2025-7 Mei 2025)" required 
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary">
             </div>
 
             <!-- Input Harga -->
             <div>
-                <label class="block text-gray-600 font-semibold">Harga (Rp)</label>
+                <label class="block text-secondary font-semibold">Harga (Rp)</label>
                 <input type="number" name="harga" placeholder="Masukkan harga" required
-                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary">
             </div>
 
-            <!-- Tombol Simpan -->
-            <button type="submit" name="submit" 
-                class="w-full bg-gradient-to-r from-blue-500 to-blue-700 text-white font-semibold py-3 rounded-lg hover:opacity-90 transition">
-                Simpan Kelas
-            </button>
+            <div class="flex gap-10">
+                <!-- Tombol Batal -->
+                <a href="<?php echo ($jenis === 'Private Mentoring') ? 'mentoringadmin.php' : 'bootcampadmin.php'; ?>" 
+                    class="w-full text-center bg-primary text-white font-semibold py-3 rounded-lg hover:opacity-90 transition">
+                    Batal
+                </a>
+
+                <!-- Tombol Simpan -->
+                <button type="submit" name="submit" 
+                    class="w-full bg-secondary text-white font-semibold py-3 rounded-lg hover:opacity-90 transition">
+                    Simpan Kelas
+                </button>
+            </div>
         </form>
     </div>
 
 </body>
 </html>
+

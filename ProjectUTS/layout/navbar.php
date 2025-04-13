@@ -18,7 +18,7 @@
 
                 <!-- Navigation Menu -->
                 <nav id="nav-menu" class="hidden absolute font-semibold py-5 bg-white shadow-lg rounded-lg w-48 left-1/2 -translate-x-1/2 top-16 lg:block lg:static lg:bg-transparent lg:shadow-none lg:w-auto">
-                    <ul class="text-secondary text-center lg:flex lg:space-x-6">
+                    <ul class="text-secondary ml-5 text-center lg:flex lg:space-x-6">
                         <li class="group">
                             <a href="index.php" class="text-semibold text-dark py-2 flex group-hover:text-primary">Beranda</a>
                         </li>
@@ -34,6 +34,9 @@
                         <li class="group relative">
                             <button id="profile-btn" class="flex items-center space-x-2">
                                 <img src="img/profil.jpg" alt="Profil" class="w-8 h-8 rounded-full">
+                                <span class="hidden lg:block text-sm">
+                                    <?= $_SESSION['username'] ?? 'Peserta'; ?>
+                                </span>
                             </button>
                             <div id="dropdown-menu" class="hidden absolute right-0 mt-2 w-48 bg-white shadow-md rounded-lg">
                                 <a href="logout.php" class="block px-4 py-2 text-dark hover:bg-gray-200">Logout</a>

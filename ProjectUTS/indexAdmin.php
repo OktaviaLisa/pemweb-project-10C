@@ -124,7 +124,7 @@ while ($row = $resultMentoringChart->fetch_assoc()) {
                         <p class="text-black">Jumlah Bootcamp</p>
                         <p class="text-3xl font-bold text-primary"><?php echo $totalKelas; ?></p>
                     </div>
-                    <img src="img/bazar.png" alt="Kelas Image" class="w-24 h-24 object-cover">
+                    <img src="img/bootcamp2.png" alt="Kelas Image" class="w-24 h-24 object-cover">
                 </div>
                 <a href="bootcampadmin.php" class="block text-center font-semibold bg-primary text-white py-2 rounded-b-lg hover:bg-primary hover:bg-opacity-90 transition">
                     Informasi selanjutnya
@@ -139,7 +139,7 @@ while ($row = $resultMentoringChart->fetch_assoc()) {
                         <p class="text-black">Jumlah Private Mentoring</p>
                         <p class="text-3xl font-bold text-primary"><?php echo $totalMentoring; ?></p>
                     </div>
-                    <img src="img/bazar.png" alt="Mentoring Image" class="w-24 h-24 object-cover">
+                    <img src="img/privat.png" alt="Mentoring Image" class="w-24 h-24 object-cover">
                 </div>
                 <a href="mentoringadmin.php" class="block text-center font-semibold bg-primary text-white py-2 rounded-b-lg hover:bg-primary hover:bg-opacity-90 transition">
                     Informasi selanjutnya
@@ -154,7 +154,7 @@ while ($row = $resultMentoringChart->fetch_assoc()) {
                         <p class="text-black">Jumlah Event</p>
                         <p class="text-3xl font-bold text-primary"><?php echo $totalEvent; ?></p>
                     </div>
-                    <img src="img/bazar.png" alt="Event Image" class="w-24 h-24 object-cover">
+                    <img src="img/Bazar.png" alt="Event Image" class="w-24 h-24 object-cover">
                 </div>
                 <a href="eventadmin.php" class="block text-center font-semibold bg-primary text-white py-2 rounded-b-lg hover:bg-primary hover:bg-opacity-90 transition">
                     Informasi selanjutnya
@@ -169,7 +169,7 @@ while ($row = $resultMentoringChart->fetch_assoc()) {
                         <p class="text-black">Jumlah Peserta</p>
                         <p class="text-3xl font-bold text-primary"><?php echo $totalPeserta; ?></p>
                     </div>
-                    <img src="img/bazar.png" alt="Peserta Image" class="w-24 h-24 object-cover">
+                    <img src="img/peserta.png" alt="Peserta Image" class="w-20 h-20 object-cover">
                 </div>
                 <a href="pesertaadmin.php" class="block text-center font-semibold bg-primary text-white py-2 rounded-b-lg hover:bg-primary hover:bg-opacity-90 transition">
                     Informasi selanjutnya

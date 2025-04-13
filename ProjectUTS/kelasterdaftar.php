@@ -4,7 +4,7 @@ include 'layout/navbar.php';
 
 $email = $_SESSION['email'];
 
-// Ambil data kelas yang didaftarkan oleh user
+// Ambil data kelas
 $sql = "SELECT k.id, k.email, c.namaKelas, c.jenis, b.tanggal, b.harga 
         FROM kelaskeranjang k
         JOIN kelas c ON k.kelas_id = c.idKelas
@@ -42,10 +42,11 @@ while ($row_chart = $result_chart->fetch_assoc()) {
     <section class="pt-36 pb-10">
         <div class="container">
             <h2 class="text-3xl font-bold text-white text-center mb-6">Kelas yang Kamu Ikuti di <span class="text-primary">UMKMGrow</span></h2>
-            <div class="overflow-x-auto">
+
+            <div id="reportSection" class="overflow-x-auto">
                 <?php if ($result->num_rows > 0): ?>
                     <!-- TABEL -->
-                    <table class="w-full border-collapse border border-gray-300">
+                    <table class="w-full border-collapse border border-gray-300 bg-white">
                         <thead>
                             <tr class="bg-primary text-white text-center">
                                 <th class="border p-3">No</th>
@@ -61,12 +62,12 @@ while ($row_chart = $result_chart->fetch_assoc()) {
                             $no = 1;
                             while ($row = $result->fetch_assoc()) {
                                 echo "<tr class='text-center'>";
-                                echo "<td class='border p-3 bg-white'>" . $no++ . "</td>";
-                                echo "<td class='border p-3 bg-white'>" . htmlspecialchars($row['email']) . "</td>";
-                                echo "<td class='border p-3 bg-white'>" . htmlspecialchars($row['jenis']) . "</td>";
-                                echo "<td class='border p-3 bg-white'>" . htmlspecialchars($row['namaKelas']) . "</td>";
-                                echo "<td class='border p-3 bg-white'>" . htmlspecialchars($row['tanggal'] ?? '-') . "</td>";
-                                echo "<td class='border p-3 bg-white'>Rp " . number_format($row['harga'], 0, ',', '.') . "</td>";
+                                echo "<td class='border p-3'>" . $no++ . "</td>";
+                                echo "<td class='border p-3'>" . htmlspecialchars($row['email']) . "</td>";
+                                echo "<td class='border p-3'>" . htmlspecialchars($row['jenis']) . "</td>";
+                                echo "<td class='border p-3'>" . htmlspecialchars($row['namaKelas']) . "</td>";
+                                echo "<td class='border p-3'>" . htmlspecialchars($row['tanggal'] ?? '-') . "</td>";
+                                echo "<td class='border p-3'>Rp " . number_format($row['harga'], 0, ',', '.') . "</td>";
                                 echo "</tr>";
                             }
                             ?>
@@ -74,9 +75,10 @@ while ($row_chart = $result_chart->fetch_assoc()) {
                     </table>
 
                     <!-- CHART & INFO KELAS -->
-                    <div class="mt-10 flex flex-col md:flex-row items-center md:items-start justify-center gap-8">
+                    <div id="chartWrapper" class="mt-10 flex flex-col md:flex-row items-center md:items-start justify-center gap-8 p-4 rounded">
                         <div class="max-w-xs mr-10">
                             <h2 class="text-2xl font-bold text-white text-center mb-4">Grafik Kelas</h2>
+                            <div id="judulUnduh" class="hidden mb-2 text-center text-xl font-bold text-secondary">Grafik Kelas</div>
                             <canvas id="kelasChart"></canvas>
                         </div>
 
@@ -92,7 +94,7 @@ while ($row_chart = $result_chart->fetch_assoc()) {
                             </ul>
                         </div>
                     </div>
-                
+
                     <!-- TOMBOL DOWNLOAD -->
                     <div class="text-center mt-6">
                         <button id="downloadPdf" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary/80">Download Riwayat Saya</button>
@@ -108,7 +110,7 @@ while ($row_chart = $result_chart->fetch_assoc()) {
         </div>
     </section>
 
-    <script src="js/script.js"></script>
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -129,38 +131,45 @@ while ($row_chart = $result_chart->fetch_assoc()) {
                 }]
             },
             options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            aspectRatio: 1,
-            plugins: {
-            legend: {
-            labels: {
-                color: "#ffffff" // warna putih
+                responsive: true,
+                maintainAspectRatio: true,
+                aspectRatio: 1,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: "#ffffff"
+                        }
+                    }
+                }
             }
-        }
-    }
-}
-
         });
 
+        // PDF GENERATION
         document.getElementById('downloadPdf').addEventListener('click', function () {
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF('p', 'mm', 'a4');
+            const reportSection = document.getElementById("reportSection");
+            const downloadButton = document.getElementById('downloadPdf');
+            const judulUnduh = document.getElementById('judulUnduh');
 
-            pdf.setFontSize(18);
-            pdf.text("Laporan Kelas yang Diikuti - UMKMGrow", 14, 20);
+            // Sembunyikan tombol & tampilkan tulisan
+            downloadButton.style.display = 'none';
+            judulUnduh.classList.remove('hidden');
 
-            html2canvas(document.querySelector("table")).then(canvas => {
+            html2canvas(reportSection, { scale: 2 }).then(canvas => {
                 const imgData = canvas.toDataURL("image/png");
-                pdf.addImage(imgData, 'PNG', 10, 30, 190, 0);
+                const imgProps = pdf.getImageProperties(imgData);
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-                html2canvas(document.getElementById("kelasChart")).then(canvas => {
-                    const imgChart = canvas.toDataURL("image/png");
-                    pdf.addPage();
-                    pdf.text("Grafik Kelas", 14, 20);
-                    pdf.addImage(imgChart, 'PNG', 50, 30, 100, 100);
-                    pdf.save("laporan_kelas.pdf");
-                });
+                pdf.setFontSize(18);
+                pdf.text("Laporan Kelas yang Diikuti - UMKMGrow", 14, 20);
+                pdf.addImage(imgData, 'PNG', 10, 30, pdfWidth - 20, pdfHeight);
+                pdf.save("laporan_kelas.pdf");
+
+                // Reset tampilan tombol & teks
+                judulUnduh.classList.add('hidden');
+                downloadButton.style.display = 'inline-block';
             });
         });
     </script>

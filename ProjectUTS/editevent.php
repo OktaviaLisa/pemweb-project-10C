@@ -1,3 +1,44 @@
+<?php
+include 'koneksi.php';
+
+// Ambil data event berdasarkan ID
+if (isset($_GET['id'])) {
+    $idEvent = $_GET['id'];
+    $query = "SELECT * FROM infoevent WHERE idEvent = ?";
+    $stmt = $koneksi->prepare($query);
+    $stmt->bind_param("i", $idEvent);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $data = $result->fetch_assoc();
+}
+
+// Proses saat form disubmit
+if (isset($_POST['submit'])) {
+    $namaEvent = $_POST['namaEvent'];
+    $deskripsi = $_POST['deskripsi'];
+    $tanggal = $_POST['tanggal'];
+    $lokasi = $_POST['lokasi'];
+
+    if ($_FILES['gambar']['name']) {
+        $gambar = $_FILES['gambar']['name'];
+        $tmp = $_FILES['gambar']['tmp_name'];
+        move_uploaded_file($tmp, "img/" . $gambar);
+
+        $query = "UPDATE infoevent SET namaEvent=?, deskripsi=?, tanggal=?, lokasi=?, gambar=? WHERE idEvent=?";
+        $stmt = $koneksi->prepare($query);
+        $stmt->bind_param("sssssi", $namaEvent, $deskripsi, $tanggal, $lokasi, $gambar, $idEvent);
+    } else {
+        $query = "UPDATE infoevent SET namaEvent=?, deskripsi=?, tanggal=?, lokasi=? WHERE idEvent=?";
+        $stmt = $koneksi->prepare($query);
+        $stmt->bind_param("ssssi", $namaEvent, $deskripsi, $tanggal, $lokasi, $idEvent);
+    }
+
+    $stmt->execute();
+    header("Location: eventadmin.php");
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>

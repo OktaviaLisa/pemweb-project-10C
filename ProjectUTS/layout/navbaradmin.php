@@ -1,4 +1,3 @@
-<?php session_start(); ?>
 <header class="bg-secondary fixed top-0 left-0 w-full flex items-center shadow-md z-50">
     <div class="container mx-auto">
         <div class="flex items-center justify-between relative">

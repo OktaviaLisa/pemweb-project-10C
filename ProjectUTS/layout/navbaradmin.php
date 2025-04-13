@@ -16,8 +16,8 @@
                 </button>
 
                 <!-- Navigation Menu -->
-                <nav id="nav-menu" class="hidden absolute font-semibold py-5 shadow-lg rounded-lg w-48 left-1/2 -translate-x-1/2 top-16 lg:block lg:static lg:bg-transparent lg:shadow-none lg:w-auto">
-                    <ul class="text-white text-center lg:flex lg:space-x-6">
+                <nav id="nav-menu" class="hidden absolute font-semibold py-5 shadow-lg rounded-lg w-48 right-4 top-16 z-50 lg:block lg:static bg-white lg:shadow-none lg:w-auto">
+                    <ul class="text-secondary text-center lg:flex lg:space-x-6 ml-10">
                         <li class="group"><a href="indexAdmin.php" class="py-2 flex group-hover:text-primary">Beranda</a></li>
                         <li class="group"><a href="bootcampadmin.php" class="py-2 flex group-hover:text-primary">Bootcamp</a></li>
                         <li class="group"><a href="mentoringadmin.php" class="py-2 flex group-hover:text-primary">Mentoring</a></li>
@@ -46,7 +46,9 @@
     </div>
 </header>
 
+<!-- SCRIPT -->
 <script>
+    // Untuk dropdown profil
     const profileBtn = document.getElementById('profile-btn');
     const dropdownMenu = document.getElementById('dropdown-menu');
 
@@ -58,5 +60,13 @@
         if (!profileBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
             dropdownMenu.classList.add('hidden');
         }
+    });
+
+    // Untuk hamburger menu (mobile)
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('nav-menu');
+
+    hamburger.addEventListener('click', () => {
+        navMenu.classList.toggle('hidden');
     });
 </script>

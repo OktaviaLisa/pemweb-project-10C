@@ -35,7 +35,7 @@
                                      v2h16v-2c0-2.66-5.33-4-8-4z"/>
                         </svg>
                         <span class="hidden lg:block text-sm">
-                            <?= $_SESSION['username'] ?? 'Admin'; ?>
+                            Admin
                         </span>
                     </button>
                     <div id="dropdown-menu" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 hidden z-50">

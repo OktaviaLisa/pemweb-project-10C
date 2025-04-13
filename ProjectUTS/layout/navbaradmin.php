@@ -15,14 +15,25 @@
                     </svg>
                 </button>
 
+
                 <!-- Navigation Menu -->
-                <nav id="nav-menu" class="hidden absolute font-semibold py-5 shadow-lg rounded-lg w-48 right-4 top-16 z-50 lg:block lg:static bg-white lg:shadow-none lg:w-auto">
-                    <ul class="text-secondary text-center lg:flex lg:space-x-6 ml-10">
-                        <li class="group"><a href="indexAdmin.php" class="py-2 flex group-hover:text-primary">Beranda</a></li>
-                        <li class="group"><a href="bootcampadmin.php" class="py-2 flex group-hover:text-primary">Bootcamp</a></li>
-                        <li class="group"><a href="mentoringadmin.php" class="py-2 flex group-hover:text-primary">Mentoring</a></li>
-                        <li class="group"><a href="eventadmin.php" class="py-2 flex group-hover:text-primary">Event</a></li>
-                        <li class="group"><a href="pesertaadmin.php" class="py-2 flex group-hover:text-primary">Peserta</a></li>
+                <nav id="nav-menu" class="hidden absolute font-semibold py-5 bg-white shadow-lg rounded-lg w-48 left-1/2 -translate-x-1/2 top-16 lg:block lg:static lg:bg-transparent lg:shadow-none lg:w-auto">
+                    <ul class="text-center lg:flex lg:space-x-6 ml-10">
+                        <li class="group">
+                            <a href="indexAdmin.php" class="py-2 flex text-secondary lg:text-white group-hover:text-primary">Beranda</a>
+                        </li>
+                        <li class="group">
+                            <a href="bootcampadmin.php" class="py-2 flex text-secondary lg:text-white group-hover:text-primary">Bootcamp</a>
+                        </li>
+                        <li class="group">
+                            <a href="mentoringadmin.php" class="py-2 flex text-secondary lg:text-white group-hover:text-primary">Mentoring</a>
+                        </li>
+                        <li class="group">
+                            <a href="eventadmin.php" class="py-2 flex text-secondary lg:text-white group-hover:text-primary">Event</a>
+                        </li>
+                        <li class="group">
+                            <a href="pesertaadmin.php" class="py-2 flex text-secondary lg:text-white group-hover:text-primary">Peserta</a>
+                        </li>
                     </ul>
                 </nav>
 

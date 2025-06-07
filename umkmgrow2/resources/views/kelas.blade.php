@@ -18,7 +18,13 @@
                     <h3 class="text-xl font-bold text-secondary">{{ $kelas->namaKelas }}</h3>
                     <p class="text-gray-700 text-sm min-h-[60px]">{{ $kelas->deskripsi }}</p>
                     <p class="text-sm font-semibold text-primary mt-2">
-                        {{ optional($kelas->batch)->tanggal }}
+                        @if ($kelas->batch && $kelas->batch->tanggal_mulai && $kelas->batch->tanggal_selesai)
+                            {{ \Carbon\Carbon::parse($kelas->batch->tanggal_mulai)->format('d M Y') }}
+                            -
+                            {{ \Carbon\Carbon::parse($kelas->batch->tanggal_selesai)->format('d M Y') }}
+                        @else
+                            <span class="text-red-500 text-sm">Tanggal belum tersedia</span>
+                        @endif
                     </p>
                     <p class="text-2xl font-bold text-secondary mt-2">
                         @if ($kelas->batch && $kelas->batch->harga !== null)
@@ -28,17 +34,24 @@
                         @endif
                     </p>
                 </div>
-                @if (optional($kelas->batch)->status === 'expired')
+
+                @php
+                    $now = \Carbon\Carbon::now();
+                    $tanggalMulai = $kelas->batch ? \Carbon\Carbon::parse($kelas->batch->tanggal_mulai) : null;
+                    $isClosed = $tanggalMulai ? $tanggalMulai->lte($now) : true;
+                @endphp
+
+                @if ($isClosed)
                     <span class="mt-4 inline-block bg-gray-400 text-white font-bold text-center py-2 px-4 rounded-lg cursor-not-allowed opacity-70">
                         Pendaftaran Ditutup
                     </span>
                 @else
-                    <a href="{{ route('daftar', ['idKelas' => $kelas->idKelas, 'jenis' => $kelas->jenis, 'namaKelas' => $kelas->namaKelas, 'harga' => $kelas->harga]) }}" 
+                    <a href="{{ route('daftar', ['idKelas' => $kelas->idKelas, 'jenis' => $kelas->jenis, 'namaKelas' => $kelas->namaKelas, 'harga' => $kelas->batch->harga ?? 0]) }}" 
                         class="mt-4 inline-block bg-primary text-white font-bold text-center py-2 px-4 rounded-lg hover:bg-orange-500 transition">
                         Daftar Sekarang
                     </a>
-                    {{-- Tombol daftar bisa ditambahkan di sini --}}
                 @endif
+
             </div>
             @endforeach
         </div>

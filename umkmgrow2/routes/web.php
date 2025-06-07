@@ -38,3 +38,44 @@ Route::get('/konfirmasibayar', [PembayaranController::class, 'tampilKonfirmasi']
 
 Route::get('/kelasterdaftar', [KelasKeranjangController::class, 'terdaftar'])->name('kelasterdaftar');
 
+Route::get('/admin', function () {return view('admin');})->name('admin');
+
+use App\Http\Controllers\AdminController;
+
+Route::get('/admin', [AdminController::class, 'index'])->name('admin');
+
+use App\Http\Controllers\BootcampController;
+
+Route::get('/bootcamp', [BootcampController::class, 'index'])->name('bootcamp.index');
+Route::post('/expirebatch', [BootcampController::class, 'expireBatch'])->name('bootcamp.expire');
+
+Route::get('/bootcamp/create', [BootcampController::class, 'create'])->name('bootcamp.create');
+Route::get('/tambahkelas', [BootcampController::class, 'create'])->name('bootcamp.create');
+Route::post('/tambahkelas', [BootcampController::class, 'store'])->name('bootcamp.store');
+
+Route::get('/editkelas/{id}', [BootcampController::class, 'edit'])->name('bootcamp.edit');
+Route::put('/editkelas/{id}', [BootcampController::class, 'update'])->name('bootcamp.update');
+
+Route::delete('/hapuskelas', [BootcampController::class, 'destroy'])->name('bootcamp.destroy');
+
+// pirvatementroign
+Route::get('/mentoring', [BootcampController::class, 'mentoring'])->name('mentoring.index');
+Route::put('/mentoring/{id}', [BootcampController::class, 'update'])->name('mentoring.update');
+
+use App\Http\Controllers\PesertaController;
+Route::get('/peserta', [PesertaController::class, 'index'])->name('peserta.index');
+
+use App\Http\Controllers\EventController;
+Route::get('/event', [EventController::class, 'index']);
+Route::get('/event/tambah', [EventController::class, 'create']);
+Route::post('/event/simpan', [EventController::class, 'store']);
+Route::get('/event/edit/{id}', [EventController::class, 'edit']);
+Route::post('/event/update/{id}', [EventController::class, 'update']);
+Route::delete('/event/hapus/{id}', [EventController::class, 'destroy'])->name('event.destroy');
+
+use Illuminate\Support\Facades\Auth;
+
+Route::post('/logout', function () {
+    Auth::logout();
+    return redirect('/login');
+})->name('logout');

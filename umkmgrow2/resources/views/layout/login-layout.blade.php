@@ -8,5 +8,8 @@
 </head>
 <body>
     @yield('content')
+
+    {{-- Tambahkan ini --}}
+    @stack('scripts')
 </body>
 </html>

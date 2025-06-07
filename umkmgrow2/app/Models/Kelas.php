@@ -18,8 +18,9 @@ class Kelas extends Model
     ];
 
     // Ambil satu batch terbaru berdasarkan tanggal
-    public function batch()
+   public function batch()
     {
-        return $this->hasOne(Batch::class, 'idKelas', 'idKelas')->latestOfMany('tanggal');
+    return $this->hasOne(Batch::class, 'idKelas', 'idKelas')->latestOfMany('tanggal_mulai');
     }
+
 }

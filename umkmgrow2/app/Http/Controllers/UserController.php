@@ -16,24 +16,32 @@ class UserController extends Controller
 
     // Proses login dengan Auth Laravel
     public function loginProcess(Request $request)
-    {
-        $credentials = $request->validate([
-            'username' => 'required',
-            'password' => 'required',
-        ]);
+{
+    $credentials = $request->validate([
+        'username' => 'required',
+        'password' => 'required',
+    ]);
 
-        if (Auth::attempt([
-            'username' => $credentials['username'],
-            'password' => $credentials['password'],
-        ])) {
-            $request->session()->regenerate();
-            return redirect()->route('home')->with('success', 'Login berhasil!');
-        }
-
-        return back()->withErrors([
-            'login_error' => 'Username atau password salah',
-        ])->withInput();
+    // ✅ Cek apakah login sebagai admin secara manual
+    if ($credentials['username'] === 'admin' && $credentials['password'] === 'admin123') {
+        $request->session()->regenerate();
+        return redirect()->route('admin')->with('success', 'Login sebagai Admin!');
     }
+
+    // ✅ Login dengan Auth biasa
+    if (Auth::attempt([
+        'username' => $credentials['username'],
+        'password' => $credentials['password'],
+    ])) {
+        $request->session()->regenerate();
+        return redirect()->route('home')->with('success', 'Login berhasil!');
+    }
+
+    return back()->withErrors([
+        'login_error' => 'Username atau password salah',
+    ])->withInput();
+}
+
 
     // Logout
     public function logout(Request $request)

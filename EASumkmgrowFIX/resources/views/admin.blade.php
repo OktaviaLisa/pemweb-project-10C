@@ -102,7 +102,7 @@
                 @if(count($labelsMentoring) > 0)
         <section>
             <h2 class="text-3xl font-bold text-center text-primary mb-6">Grafik Pendaftar Private Mentoring</h2>
-            <div class="bg-white p-6 rounded-lg shadow-md max-w-5xl mx-auto mb-2 h-96">
+            <div class="bg-white p-6 rounded-lg shadow-md max-w-5xl mx-auto mb-2 h-96"> <!-- Bisa responsive tampilan kecil-->
                 <canvas id="mentoringChart" class="w-full h-full"></canvas>
             </div>
 
